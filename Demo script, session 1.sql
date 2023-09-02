@@ -1,3 +1,15 @@
+/*
+
+    STOP: THIS SCRIPT WILL NOT WORK IN AZURE SQL DATABASE
+          OR AZURE SQL EDGE. The Azure SQL engines come
+          with Read Committed Snapshot Isolation turned on
+          by default, and to the best of my knowledge, it
+          cannot be properly disabled.
+
+          This means that the locking-related demos below
+          will not perform as expected.
+
+*/
 SET NOCOUNT ON;
 
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED; -- SQL Server default
@@ -316,10 +328,7 @@ DECLARE @Account varchar(100)='Brian',
  
 BEGIN TRANSACTION;
  
-    IF (EXISTS (SELECT NULL
-                FROM dbo.Deadlocks
-                WHERE Account=@Account)
-        ) BEGIN;
+    IF (EXISTS (SELECT NULL FROM dbo.Deadlocks WHERE Account=@Account)) BEGIN;
  
 
         WAITFOR DELAY '00:00:10';
